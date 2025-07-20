@@ -1,0 +1,278 @@
+/* style.css - Modern Revamp */
+
+/* 1. Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* 2. CSS Variables for Theming (Light & Dark Mode) */
+:root {
+    --font-family: 'Poppins', sans-serif;
+    --primary-gradient: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+    --primary-color-hover: #a855f7;
+    --text-color: #2d1e4a;
+    --text-secondary: #4b3b66;
+    --bg-color: linear-gradient(135deg, #f3e8ff, #e9d5ff);
+    --container-bg: #fff0ff;
+    --input-border: #d6b3ff;
+    --input-focus-border: #a855f7;
+    --insights-bg: #fef9ff;
+    --insights-border: #ecd7ff;
+    --shadow-color: rgba(168, 85, 247, 0.15);
+    --error-bg: #ffe0f0;
+    --error-text: #c026d3;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-color: #e4e6eb;
+        --text-secondary: #b0b3b8;
+        --bg-color: #121212;
+        --container-bg: #1e1e1e;
+        --input-border: #444;
+        --input-focus-border: #2575fc;
+        --insights-bg: #2a2a2a;
+        --insights-border: #3a3a3a;
+        --shadow-color: rgba(0, 0, 0, 0.4);
+        --error-bg: #3e2723;
+        --error-text: #ef9a9a;
+    }
+}
+
+/* 3. Base Styles */
+body {
+    font-family: var(--font-family);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    background: var(--bg-color); /* ← now using gradient */
+    color: var(--text-color);
+    margin: 20px;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+.container {
+    background-color: var(--container-bg);
+    padding: 35px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px var(--shadow-color);
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+    border: 1px solid var(--insights-border);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+h1 {
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+h2 {
+    font-weight: 500;
+}
+
+/* 4. Input & Button Styles */
+.input-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    gap: 10px;
+}
+
+#videoUrlInput {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: var(--font-family);
+    background-color: transparent;
+    color: var(--text-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#videoUrlInput:focus {
+    outline: none;
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+}
+
+#getInsightsButton {
+    padding: 12px 25px;
+    background-image: var(--primary-gradient);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: var(--font-family);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    flex-shrink: 0;
+}
+
+#getInsightsButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+}
+
+#getInsightsButton:active {
+    transform: scale(0.97);
+}
+
+/* 5. Video & Insights Containers */
+.video-container {
+    margin-bottom: 30px;
+    background-color: var(--insights-border);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    padding-top: 56.25%;
+    height: 0;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.insights-container {
+    text-align: left;
+    background-color: var(--insights-bg);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid var(--insights-border);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#insightsContent {
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+#insightsContent h1, #insightsContent h2, #insightsContent h3 {
+    color: var(--text-color);
+}
+
+#insightsContent p {
+    margin-bottom: 1em;
+}
+
+#insightsContent ul, #insightsContent ol {
+    padding-left: 20px;
+}
+
+#insightsContent li {
+    margin-bottom: 0.5em;
+}
+
+/* 6. Loading Spinner & Error Message */
+.loading {
+    margin-top: 20px;
+    font-size: 18px;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--input-border);
+    border-top-color: var(--input-focus-border);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.error {
+    margin-top: 20px;
+    font-size: 16px;
+    color: var(--error-text);
+    background-color: var(--error-bg);
+    padding: 15px;
+    border-radius: 8px;
+    text-align: left;
+    border: 1px solid var(--error-text);
+}
+
+/* 7. Responsive Design Tweaks */
+@media (max-width: 768px) {
+    .input-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #getInsightsButton {
+        width: 100%;
+    }
+}
+
+/* 8. Smooth Fade Animation */
+.fade-in {
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 9. Button Hover/Focus */
+.insights-container h2:hover {
+    color: var(--primary-color-hover);
+    cursor: default;
+}
+
+/* 10. Autofill Fix */
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px var(--container-bg) inset;
+    -webkit-text-fill-color: var(--text-color);
+    transition: background-color 5000s ease-in-out 0s;
+}
+/* 11. Color Pop on Headings */
+h1 {
+    color: #4940e0;
+    background: -webkit-linear-gradient(45deg, #ff6ec4, #7873f5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.insights-container h2 {
+    color: #5244d8;
+}
+
+/* 12. Add Glow to Embedded Video */
+.video-container iframe {
+    box-shadow: 0 6px 24px rgba(120, 115, 245, 0.25);
+    border-radius: 12px;
+}
+
+/* 13. Highlight Focus and Hover Colors */
+#videoUrlInput:focus {
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 8px rgba(255, 110, 196, 0.3);
+}
+
+#getInsightsButton:hover {
+    background-image: linear-gradient(135deg, #ff9bcb 0%, #9893ff 100%);
+    box-shadow: 0 4px 18px rgba(255, 110, 196, 0.4);
+}
+
+/* 14. Spinner with Color */
+.spinner {
+    border-top-color: #ff6ec4;
+}

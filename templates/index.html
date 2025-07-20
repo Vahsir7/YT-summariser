@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Insights</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube Video Insights 🚀</h1>
+        <div class="input-section">
+            <input type="text" id="videoUrlInput" placeholder="Enter YouTube Video URL...">
+            <button id="getInsightsButton">Get Insights</button>
+        </div>
+
+        <div id="videoContainer" class="video-container"></div>
+
+        <div id="insightsContainer" class="insights-container">
+            <h2>Video Insights ✨</h2>
+            <div id="insightsContent">
+                <p id="insightsText">Enter a YouTube URL above and click "Get Insights" to see the analysis.</p>
+            </div>
+        </div>
+
+        <div id="loading" class="loading" style="display:none;">
+            <div class="spinner"></div>
+            <span>Loading insights... please wait.</span>
+        </div>
+
+        <div id="error" class="error" style="display:none;"></div>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
