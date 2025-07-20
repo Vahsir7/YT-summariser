@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoContainer.innerHTML = embedHtml;
 
         try {
-            const response = await fetch('http://127.0.0.1:8002/get-insights', {
+            const response = await fetch('https://yt-transcript-summariser.onrender.com/get-insights', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
