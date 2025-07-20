@@ -1,12 +1,11 @@
 # main.py
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
 import google.generativeai as genai
 import os
 from fastapi.middleware.cors import CORSMiddleware 
 from youtube_transcript_api import YouTubeTranscriptApi, NoTranscriptFound, TranscriptsDisabled 
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -25,14 +24,7 @@ app.mount("/static", StaticFiles(directory=static_files_path), name="static")
 async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-
-origins = [
-    "http://localhost:8000",  
-    "null",                   
-    "file://",                
-    "https://yt-transcript-summariser.onrender.com/",
-    "https://yourapp.onrender.com/get-insights"
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -41,18 +33,17 @@ app.add_middleware(
     allow_methods=["*"],         
     allow_headers=["*"],         
 )
-
 class VideoRequest(BaseModel):
     video_url: str
 load_dotenv()
 API_KEY = os.getenv("GEMINI_API_KEY")
 if not API_KEY:
-    print("Warning: GEMINI_API_KEY environment variable not set. This might be fine in Canvas, but required for local execution.")
+    print("Warning: GEMINI_API_KEY environment variable not set.")
 
 genai.configure(api_key=API_KEY)
 
+# Helper to extract YouTube video ID
 def get_youtube_video_id(url: str) -> str | None:
-    """Extracts the YouTube video ID from a given URL."""
     import re
     regex = r"(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([\w-]{11})(?:\S+)?"
     match = re.search(regex, url)
@@ -71,9 +62,10 @@ async def get_video_insights(request: VideoRequest):
         raise HTTPException(status_code=400, detail="Invalid YouTube video URL provided.")
 
     transcript_content = ""
-    try:
+    try: 
         transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
         transcript_content = " ".join([entry['text'] for entry in transcript_list])
+
     except NoTranscriptFound:
         raise HTTPException(status_code=404, detail="No transcript available for this video (e.g., no captions, private video).")
     except TranscriptsDisabled:
@@ -81,9 +73,6 @@ async def get_video_insights(request: VideoRequest):
     except Exception as e:
         print(f"Error fetching transcript: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to fetch transcript: {str(e)}")
-
-    if not transcript_content:
-        raise HTTPException(status_code=404, detail="Transcript was fetched but is empty.")
 
     try:
         model = genai.GenerativeModel('gemini-2.0-flash')
@@ -94,7 +83,6 @@ async def get_video_insights(request: VideoRequest):
         """
         response = model.generate_content(prompt)
 
-        # Extract the generated text
         if response.candidates and response.candidates[0].content.parts:
             insights = response.candidates[0].content.parts[0].text
             return {"video_id": video_id, "insights": insights}

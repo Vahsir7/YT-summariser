@@ -1,6 +1,3 @@
-/* style.css - Modern Revamp */
-
-/* 1. Import Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
 /* 2. CSS Variables for Theming (Light & Dark Mode) */
@@ -44,7 +41,7 @@ body {
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
-    background: var(--bg-color); /* ← now using gradient */
+    background: var(--bg-color); 
     color: var(--text-color);
     margin: 20px;
     box-sizing: border-box;
