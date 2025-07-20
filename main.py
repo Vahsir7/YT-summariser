@@ -26,10 +26,7 @@ app.mount("/static", StaticFiles(directory=static_files_path), name="static")
 async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-# --- CORS Configuration ---
-# Define the origins that are allowed to make requests to your API.
-# This is crucial for local development where your HTML file might be served
-# from a different origin (e.g., file:// or a different port) than your FastAPI backend.
+
 origins = [
     "http://localhost",
     "http://localhost:8000",  # Your FastAPI app's common local origin
@@ -38,7 +35,8 @@ origins = [
     "http://localhost:5500",  # Common port for Live Server in VS Code or Python's http.server
     "null",                   # Some browsers send 'null' as origin for file://
     "file://",                # Explicitly allow file:// protocol (less secure, but helps for direct file opening)
-    "http://127.0.0.1:5500"   # Explicitly allow the frontend's origin
+    "http://127.0.0.1:5500",   # Explicitly allow the frontend's origin
+    "https://yt-transcript-summariser.onrender.com/"
 ]
 
 app.add_middleware(
