@@ -80,9 +80,14 @@ async def get_video_insights(request: VideoRequest):
         video_title = "YouTube Video" # Fallback title
 
     # --- Fetch Transcript using the reliable library ---
-    try: 
-        transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
-        transcript_content = " ".join([entry['text'] for entry in transcript_list])
+    try:
+        # Creating an instance of the YouTubeTranscriptApi class
+        # and using the fetch method - this is the correct usage per documentation
+        ytt_api = YouTubeTranscriptApi()
+        fetched_transcript = ytt_api.fetch(video_id)
+        
+        # Join all the text snippets from the transcript
+        transcript_content = " ".join([snippet.text for snippet in fetched_transcript])
     except NoTranscriptFound:
         raise HTTPException(status_code=404, detail="No transcript available for this video.")
     except TranscriptsDisabled:
@@ -92,7 +97,7 @@ async def get_video_insights(request: VideoRequest):
 
     # --- Generate Insights with Gemini ---
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.5-flash-lite') 
         prompt = f"""
             Analyze the following video transcript and generate a concise, well-structured summary in Markdown format.
             Include a brief summary, key insights in a bulleted list, and a few discussion topics.
